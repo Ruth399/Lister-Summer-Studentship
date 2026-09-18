@@ -32,13 +32,6 @@ def run(protocol: protocol_api.ProtocolContext) -> None:  #we are defining "prot
             namespace = "opentrons",
             version = 1,
             )  
-
-        tip_rack_3 = protocol.load_labware(
-                "opentrons_flex_96_filtertiprack_1000ul",
-                location = "A3",
-                namespace = "opentrons",
-                version = 1,
-            )  
          
     #the load_labware  method takes several arguments: the name of the labware to load, the location on the deck where it should be placed, an optional label for the labware, the namespace of the labware definition (this specifies whether the labware belongs to the pre-established library or was instead custom added with a JSON file), and the version of the labware definition. In this case, we are loading a tip rack and placing it in slot C2.
         stock_bacteria = protocol.load_labware(
@@ -57,12 +50,20 @@ def run(protocol: protocol_api.ProtocolContext) -> None:  #we are defining "prot
             label = "Fresh BHI cell medium",
             )
 
-        normalised_bacteria = protocol.load_labware(
+        normalised_bacteria_1 = protocol.load_labware(
             "corning_96_wellplate_330ul",
             location = "C1",
             namespace = "opentrons",
             version = 1,
-            label = "Destination plate for the OD600 normalised bacteria",
+            label = "Destination plate for the OD600 normalised bacteria, replicate 1",
+            )
+
+        normalised_bacteria_2 = protocol.load_labware(
+            "corning_96_wellplate_330ul",
+            location = "C3",
+            namespace = "opentrons",
+            version = 1,
+            label = "Destination plate for the OD600 normalised bacteria, replicate 2",
             )
 
         waste_chute = protocol.load_waste_chute()
@@ -99,7 +100,7 @@ def run(protocol: protocol_api.ProtocolContext) -> None:  #we are defining "prot
                  active_pipette = pipette 
             active_pipette.pick_up_tip(tip_rack_1)
             active_pipette.aspirate(BHI_volume, BHI_media[well_position])
-            active_pipette.dispense(BHI_volume, normalised_bacteria[well_position])
+            active_pipette.dispense(BHI_volume, normalised_bacteria_1[well_position])
         pipette.drop_tip(waste_chute)
 
 
@@ -117,7 +118,7 @@ def run(protocol: protocol_api.ProtocolContext) -> None:  #we are defining "prot
                  active_pipette = pipette
             active_pipette.pick_up_tip(tip_rack_2)
             active_pipette.aspirate(stock_bacteria_volume, stock_bacteria[well_position])
-            active_pipette.dispense(stock_bacteria_volume, normalised_bacteria[well_position])
+            active_pipette.dispense(stock_bacteria_volume, normalised_bacteria_1[well_position])
             active_pipette.drop_tip(waste_chute)
 
 
